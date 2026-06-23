@@ -2,8 +2,9 @@ const fs = require('fs');
 const _ = require("underscore");
 const express = require('express');
 const app = express();
-app.use(express.json());
 
+app.use(express.json());
+app.use('/images', express.static('assets'));
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -29,11 +30,9 @@ app.get('/games', (req, res) => {
             });
         }
 
-
     } catch (error) {
         body = { error: "something went wrong" };
     }
-
     res.send(body);
 })
 
@@ -76,18 +75,13 @@ app.post('/quantity', (req, res) => {
         //2.Lägger man sedan till en ny produkt så kommer filen games.json att uppdateras.
         fs.writeFileSync('./data/games.json', JSON.stringify(highPriceFirst, null, 2));
 
-
-
-
-
         res.json(games);
 
     } catch (error) {
 
         res.status(500).json({ error: "Something went wrong" });
     }
-
-})
+});
 
 
 app.listen(3000, () => {
